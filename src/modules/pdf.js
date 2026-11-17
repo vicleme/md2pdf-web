@@ -19,9 +19,18 @@ export function buildExportNode(html, options, doc = document) {
   node.className = `document theme-${o.theme} mode-${o.colorMode}`;
   node.style.width = `${contentWidthMm(o)}mm`;
   node.style.fontSize = `${o.fontSizePt}pt`;
+  if (o.colorMode === 'dark') {
+    node.style.boxSizing = 'border-box';
+    node.style.padding = `0 ${DARK_PAD_MM}mm`;
+  }
   node.innerHTML = html;
   return node;
 }
+
+/** Inner horizontal padding of a dark export, so the margin bleed never touches text. */
+const DARK_PAD_MM = 1;
+/** How far the painted margins reach into the content, hiding antialiasing seams. */
+const BLEED = { side: 0.8, top: 0.3, bottom: 0.5 };
 
 /** "#0d1117" -> [13, 17, 23] */
 function hexToRgb(hex) {
@@ -54,16 +63,15 @@ function paintDarkMargins(pdf, options) {
   const pageW = o.orientation === 'landscape' ? h : w;
   const pageH = o.orientation === 'landscape' ? w : h;
   const m = o.marginMm;
-  const bleed = 0.5; // small overlap at the bottom, hides rounding seams
   const [r, g, b] = hexToRgb(PAGE_BACKGROUNDS.dark);
 
   for (let page = 1; page <= pdf.getNumberOfPages(); page += 1) {
     pdf.setPage(page);
     pdf.setFillColor(r, g, b); // fill color is stored per page, so set it after setPage
-    pdf.rect(0, 0, pageW, m, 'F'); // top
-    pdf.rect(0, pageH - m - bleed, pageW, m + bleed, 'F'); // bottom
-    pdf.rect(0, 0, m, pageH, 'F'); // left
-    pdf.rect(pageW - m, 0, m, pageH, 'F'); // right
+    pdf.rect(0, 0, pageW, m + BLEED.top, 'F'); // top
+    pdf.rect(0, pageH - m - BLEED.bottom, pageW, m + BLEED.bottom, 'F'); // bottom
+    pdf.rect(0, 0, m + BLEED.side, pageH, 'F'); // left
+    pdf.rect(pageW - m - BLEED.side, 0, m + BLEED.side, pageH, 'F'); // right
   }
 }
 
