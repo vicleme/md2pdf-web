@@ -1,0 +1,184 @@
+/*
+ * Styles for the rendered Markdown document.
+ * Used by the live preview AND by the node that html2pdf.js captures,
+ * so what you see is what ends up in the PDF.
+ */
+
+.document {
+  color: #1f2328;
+  background: #ffffff;
+  line-height: 1.6;
+  word-wrap: break-word;
+  overflow-wrap: anywhere;
+}
+
+.document.theme-clean {
+  font-family: system-ui, -apple-system, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+}
+
+.document.theme-academic {
+  font-family: 'Georgia', 'Times New Roman', Times, serif;
+  line-height: 1.7;
+  text-align: justify;
+  hyphens: auto;
+}
+
+.document h1,
+.document h2,
+.document h3,
+.document h4,
+.document h5,
+.document h6 {
+  margin: 1.4em 0 0.5em;
+  line-height: 1.25;
+  font-weight: 650;
+  break-after: avoid;
+  page-break-after: avoid;
+}
+
+.document > :first-child {
+  margin-top: 0;
+}
+
+.document h1 {
+  font-size: 2em;
+  padding-bottom: 0.3em;
+  border-bottom: 1px solid #d0d7de;
+}
+
+.document h2 {
+  font-size: 1.5em;
+  padding-bottom: 0.25em;
+  border-bottom: 1px solid #e3e7eb;
+}
+
+.document h3 {
+  font-size: 1.25em;
+}
+
+.document h4 {
+  font-size: 1.05em;
+}
+
+.document h5,
+.document h6 {
+  font-size: 0.95em;
+  color: #57606a;
+}
+
+.document p,
+.document ul,
+.document ol,
+.document blockquote,
+.document pre,
+.document table,
+.document dl {
+  margin: 0 0 1em;
+}
+
+.document ul,
+.document ol {
+  padding-left: 1.6em;
+}
+
+.document li + li {
+  margin-top: 0.25em;
+}
+
+.document li > ul,
+.document li > ol {
+  margin: 0.25em 0 0;
+}
+
+.document input[type='checkbox'] {
+  margin-right: 0.45em;
+}
+
+.document a {
+  color: #0b5fff;
+  text-decoration: underline;
+  text-underline-offset: 2px;
+}
+
+.document blockquote {
+  padding: 0.2em 1em;
+  color: #57606a;
+  border-left: 4px solid #d0d7de;
+  background: #f6f8fa;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.document blockquote > :last-child {
+  margin-bottom: 0;
+}
+
+.document code {
+  padding: 0.15em 0.4em;
+  border-radius: 4px;
+  background: #eff1f3;
+  font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, 'Liberation Mono', monospace;
+  font-size: 0.88em;
+}
+
+.document pre {
+  padding: 0.9em 1em;
+  border-radius: 6px;
+  background: #f6f8fa;
+  border: 1px solid #e3e7eb;
+  white-space: pre-wrap;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.document pre code {
+  padding: 0;
+  background: none;
+  font-size: 0.85em;
+}
+
+.document table {
+  width: 100%;
+  border-collapse: collapse;
+  font-size: 0.95em;
+}
+
+.document thead {
+  display: table-header-group;
+}
+
+.document tr {
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.document th,
+.document td {
+  padding: 0.45em 0.7em;
+  border: 1px solid #d0d7de;
+  text-align: left;
+  vertical-align: top;
+}
+
+.document th {
+  background: #f6f8fa;
+  font-weight: 600;
+}
+
+.document tbody tr:nth-child(even) td {
+  background: #fafbfc;
+}
+
+.document img {
+  max-width: 100%;
+  height: auto;
+  break-inside: avoid;
+  page-break-inside: avoid;
+}
+
+.document hr {
+  height: 1px;
+  margin: 1.6em 0;
+  border: 0;
+  background: #d0d7de;
+}

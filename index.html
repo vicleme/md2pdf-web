@@ -1,0 +1,99 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="description" content="Convert Markdown files to PDF right in your browser. Private, fast, no uploads." />
+    <title>MD2PDF</title>
+    <link rel="icon" type="image/svg+xml" href="./favicon.svg" />
+  </head>
+  <body>
+    <header class="topbar">
+      <div class="brand">
+        <span class="brand-mark" aria-hidden="true">M↓</span>
+        <div>
+          <h1 data-i18n="appTitle">MD2PDF</h1>
+          <p class="tagline" data-i18n="tagline"></p>
+        </div>
+      </div>
+      <label class="lang">
+        <span class="sr-only" data-i18n="language"></span>
+        <select id="locale" aria-label="Language"></select>
+      </label>
+    </header>
+
+    <main class="layout">
+      <section class="pane editor-pane" id="editor-pane" aria-labelledby="editor-title">
+        <div class="pane-head">
+          <h2 id="editor-title" data-i18n="editorLabel"></h2>
+          <div class="actions">
+            <button type="button" id="btn-open" class="btn" data-i18n="openFile"></button>
+            <button type="button" id="btn-sample" class="btn btn-ghost" data-i18n="loadExample"></button>
+            <button type="button" id="btn-clear" class="btn btn-ghost" data-i18n="clear"></button>
+            <input type="file" id="file-input" accept=".md,.markdown,.mdown,.txt,text/markdown,text/plain" hidden />
+          </div>
+        </div>
+
+        <div class="dropzone" id="dropzone">
+          <textarea id="editor" spellcheck="false" data-i18n-placeholder="placeholder"></textarea>
+          <div class="drop-overlay" aria-hidden="true" data-i18n="dropHint"></div>
+        </div>
+
+        <details class="options" id="options" open>
+          <summary data-i18n="optionsTitle"></summary>
+          <div class="options-grid">
+            <label>
+              <span data-i18n="pageSize"></span>
+              <select id="opt-page-size">
+                <option value="a4">A4</option>
+                <option value="letter">Letter</option>
+                <option value="legal">Legal</option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="orientation"></span>
+              <select id="opt-orientation">
+                <option value="portrait" data-i18n="portrait"></option>
+                <option value="landscape" data-i18n="landscape"></option>
+              </select>
+            </label>
+            <label>
+              <span data-i18n="margin"></span>
+              <input type="number" id="opt-margin" min="5" max="40" step="1" />
+            </label>
+            <label>
+              <span data-i18n="fontSize"></span>
+              <input type="number" id="opt-font-size" min="8" max="18" step="1" />
+            </label>
+            <label>
+              <span data-i18n="theme"></span>
+              <select id="opt-theme">
+                <option value="clean" data-i18n="themeClean"></option>
+                <option value="academic" data-i18n="themeAcademic"></option>
+              </select>
+            </label>
+          </div>
+        </details>
+
+        <div class="export-bar">
+          <button type="button" id="btn-download" class="btn btn-primary" data-i18n="downloadPdf"></button>
+          <button type="button" id="btn-print" class="btn" data-i18n="printPdf" data-i18n-title="printHint"></button>
+          <span id="status" class="status" role="status" aria-live="polite"></span>
+        </div>
+        <p class="stats" id="stats"></p>
+      </section>
+
+      <section class="pane preview-pane" aria-labelledby="preview-title">
+        <div class="pane-head">
+          <h2 id="preview-title" data-i18n="previewLabel"></h2>
+        </div>
+        <div class="preview-scroll">
+          <article id="preview" class="document theme-clean" aria-live="polite"></article>
+        </div>
+      </section>
+    </main>
+
+    <style id="print-page"></style>
+    <script type="module" src="/src/main.js"></script>
+  </body>
+</html>
