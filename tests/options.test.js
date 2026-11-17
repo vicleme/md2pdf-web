@@ -69,4 +69,5 @@ test('buildPrintColorCss paints the page with the document color', () => {
   assert.match(buildPrintColorCss({ colorMode: 'dark' }), /#0d1117/);
   assert.match(buildPrintColorCss({ colorMode: 'light' }), /#ffffff/);
   assert.match(buildPrintColorCss({}), /print-color-adjust: exact/);
+  assert.match(buildPrintColorCss({ colorMode: 'dark' }), /@page \{ background: #0d1117; \}/);
 });

@@ -31,6 +31,8 @@ export function buildExportNode(html, options, doc = document) {
 const DARK_PAD_MM = 1;
 /** How far the painted margins reach into the content, hiding antialiasing seams. */
 const BLEED = { side: 0.8, top: 0.3, bottom: 0.5 };
+/** The painted margins also run this far past the page edge, so no hairline of paper shows. */
+const OVERSHOOT = 2;
 
 /** "#0d1117" -> [13, 17, 23] */
 function hexToRgb(hex) {
@@ -68,10 +70,11 @@ function paintDarkMargins(pdf, options) {
   for (let page = 1; page <= pdf.getNumberOfPages(); page += 1) {
     pdf.setPage(page);
     pdf.setFillColor(r, g, b); // fill color is stored per page, so set it after setPage
-    pdf.rect(0, 0, pageW, m + BLEED.top, 'F'); // top
-    pdf.rect(0, pageH - m - BLEED.bottom, pageW, m + BLEED.bottom, 'F'); // bottom
-    pdf.rect(0, 0, m + BLEED.side, pageH, 'F'); // left
-    pdf.rect(pageW - m - BLEED.side, 0, m + BLEED.side, pageH, 'F'); // right
+    const o2 = OVERSHOOT;
+    pdf.rect(-o2, -o2, pageW + 2 * o2, m + BLEED.top + o2, 'F'); // top
+    pdf.rect(-o2, pageH - m - BLEED.bottom, pageW + 2 * o2, m + BLEED.bottom + o2, 'F'); // bottom
+    pdf.rect(-o2, -o2, m + BLEED.side + o2, pageH + 2 * o2, 'F'); // left
+    pdf.rect(pageW - m - BLEED.side, -o2, m + BLEED.side + o2, pageH + 2 * o2, 'F'); // right
   }
 }
 

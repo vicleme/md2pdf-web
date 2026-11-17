@@ -103,10 +103,18 @@ export function buildPageCss(options) {
 
 /**
  * Extra print CSS so a dark document also paints the page margins and keeps
- * its colors (browsers drop backgrounds when printing unless told otherwise).
+ * its colors in the browser dialog. "print-color-adjust: exact" stops browsers
+ * from dropping backgrounds and lightening text to save ink, and the @page
+ * background paints the margin area, which the root background does not reach.
  */
 export function buildPrintColorCss(options) {
   const o = normalizeOptions(options);
   const bg = PAGE_BACKGROUNDS[o.colorMode];
-  return `@media print { html, body { background: ${bg} !important; -webkit-print-color-adjust: exact; print-color-adjust: exact; } }`;
+  return [
+    '@media print {',
+    `  @page { background: ${bg}; }`,
+    `  html, body { background: ${bg} !important; }`,
+    '  *, *::before, *::after { -webkit-print-color-adjust: exact !important; print-color-adjust: exact !important; }',
+    '}',
+  ].join('\n');
 }
