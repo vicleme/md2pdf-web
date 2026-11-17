@@ -1,10 +1,11 @@
 import { parseMarkdown } from '../modules/markdown.js';
 import { sanitizeHtml } from '../modules/sanitize.js';
-import { buildPageCss, normalizeOptions } from '../modules/options.js';
+import { buildPageCss, buildPrintColorCss, normalizeOptions } from '../modules/options.js';
 import { isMarkdownFile, readTextFile, suggestPdfName } from '../modules/files.js';
 import { exportPdf } from '../modules/pdf.js';
 import { LOCALES, detectLocale, isSupportedLocale, t } from '../modules/i18n.js';
 import { loadSettings, saveSettings } from '../modules/storage.js';
+import { applyAppearance, normalizeAppearance } from '../modules/theme.js';
 import { countWords, debounce } from '../modules/utils.js';
 import sampleEn from '../samples/sample.en.md?raw';
 import samplePt from '../samples/sample.pt-BR.md?raw';
@@ -16,6 +17,10 @@ const $ = (selector) => document.querySelector(selector);
 export function initApp() {
   const els = {
     locale: $('#locale'),
+    appearance: $('#appearance'),
+    darkHint: $('#dark-hint'),
+    printColors: $('#print-colors'),
+    optColors: $('#opt-colors'),
     editor: $('#editor'),
     preview: $('#preview'),
     dropzone: $('#dropzone'),
@@ -38,11 +43,12 @@ export function initApp() {
   const saved = loadSettings();
   const state = {
     locale: isSupportedLocale(saved.locale) ? saved.locale : detectLocale(),
+    appearance: normalizeAppearance(saved.appearance),
     options: normalizeOptions(saved.options),
     fileName: '',
   };
 
-  const persist = () => saveSettings({ locale: state.locale, options: state.options });
+  const persist = () => saveSettings({ locale: state.locale, appearance: state.appearance, options: state.options });
 
   // ---------- i18n ----------
   els.locale.innerHTML = LOCALES.map((l) => `<option value="${l.code}">${l.label}</option>`).join('');
@@ -87,10 +93,12 @@ export function initApp() {
   }
 
   function renderPreview() {
-    els.preview.className = `document theme-${state.options.theme}`;
+    els.preview.className = `document theme-${state.options.theme} mode-${state.options.colorMode}`;
     els.preview.style.fontSize = `${state.options.fontSizePt}pt`;
     els.preview.innerHTML = currentHtml();
     els.printStyle.textContent = buildPageCss(state.options);
+    els.printColors.textContent = buildPrintColorCss(state.options);
+    els.darkHint.hidden = state.options.colorMode !== 'dark';
     updateStats();
   }
   const renderPreviewSoon = debounce(renderPreview, 120);
@@ -103,6 +111,7 @@ export function initApp() {
     els.optMargin.value = o.marginMm;
     els.optFontSize.value = o.fontSizePt;
     els.optTheme.value = o.theme;
+    els.optColors.value = o.colorMode;
   }
 
   function readOptionInputs() {
@@ -112,12 +121,13 @@ export function initApp() {
       marginMm: els.optMargin.value,
       fontSizePt: els.optFontSize.value,
       theme: els.optTheme.value,
+      colorMode: els.optColors.value,
     });
     persist();
     renderPreview();
   }
 
-  [els.optPageSize, els.optOrientation, els.optTheme].forEach((el) =>
+  [els.optPageSize, els.optOrientation, els.optTheme, els.optColors].forEach((el) =>
     el.addEventListener('change', readOptionInputs),
   );
   [els.optMargin, els.optFontSize].forEach((el) => {
@@ -222,7 +232,14 @@ export function initApp() {
     applyTranslations();
   });
 
+  // ---------- appearance ----------
+  els.appearance.addEventListener('change', () => {
+    state.appearance = applyAppearance(els.appearance.value);
+    persist();
+  });
+
   // ---------- boot ----------
+  els.appearance.value = applyAppearance(state.appearance);
   els.editor.value = SAMPLES[state.locale] ?? SAMPLES.en;
   syncOptionInputs();
   applyTranslations();

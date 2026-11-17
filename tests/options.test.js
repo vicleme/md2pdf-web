@@ -4,6 +4,9 @@ import {
   DEFAULT_OPTIONS,
   buildPageCss,
   buildPdfConfig,
+  buildPrintColorCss,
+  contentHeightMm,
+  padHeightToPages,
   contentWidthMm,
   normalizeOptions,
 } from '../src/modules/options.js';
@@ -12,7 +15,7 @@ test('normalizeOptions fills defaults for missing or invalid input', () => {
   assert.deepEqual(normalizeOptions(), { ...DEFAULT_OPTIONS });
   assert.deepEqual(normalizeOptions(null), { ...DEFAULT_OPTIONS });
   assert.deepEqual(
-    normalizeOptions({ pageSize: 'a0', orientation: 'diagonal', theme: 'neon', marginMm: 'x', fontSizePt: NaN }),
+    normalizeOptions({ pageSize: 'a0', orientation: 'diagonal', theme: 'neon', colorMode: 'sepia', marginMm: 'x', fontSizePt: NaN }),
     { ...DEFAULT_OPTIONS },
   );
 });
@@ -25,8 +28,8 @@ test('normalizeOptions clamps numeric values', () => {
 });
 
 test('normalizeOptions keeps valid values', () => {
-  const o = normalizeOptions({ pageSize: 'letter', orientation: 'landscape', marginMm: 20, fontSizePt: 12, theme: 'academic' });
-  assert.deepEqual(o, { pageSize: 'letter', orientation: 'landscape', marginMm: 20, fontSizePt: 12, theme: 'academic' });
+  const o = normalizeOptions({ pageSize: 'letter', orientation: 'landscape', marginMm: 20, fontSizePt: 12, theme: 'academic', colorMode: 'dark' });
+  assert.deepEqual(o, { pageSize: 'letter', orientation: 'landscape', marginMm: 20, fontSizePt: 12, theme: 'academic', colorMode: 'dark' });
 });
 
 test('contentWidthMm subtracts margins and respects orientation', () => {
@@ -46,4 +49,24 @@ test('buildPdfConfig maps options to html2pdf settings', () => {
 test('buildPageCss produces an @page rule', () => {
   assert.equal(buildPageCss({ pageSize: 'a4', orientation: 'portrait', marginMm: 15 }), '@page { size: A4 portrait; margin: 15mm; }');
   assert.equal(buildPageCss({ pageSize: 'letter', orientation: 'landscape', marginMm: 10 }), '@page { size: letter landscape; margin: 10mm; }');
+});
+
+test('contentHeightMm subtracts margins and respects orientation', () => {
+  assert.equal(contentHeightMm({ pageSize: 'a4', marginMm: 15 }), 267);
+  assert.equal(contentHeightMm({ pageSize: 'a4', orientation: 'landscape', marginMm: 15 }), 180);
+});
+
+test('padHeightToPages rounds up to whole pages, never an exact multiple', () => {
+  const pagePx = (267 * 96) / 25.4;
+  const one = padHeightToPages(100, { pageSize: 'a4', marginMm: 15 });
+  assert.ok(one < pagePx && one > pagePx - 2);
+  const two = padHeightToPages(pagePx + 10, { pageSize: 'a4', marginMm: 15 });
+  assert.ok(two < 2 * pagePx && two > 2 * pagePx - 2);
+  assert.equal(padHeightToPages(0, { pageSize: 'a4', marginMm: 15 }), one);
+});
+
+test('buildPrintColorCss paints the page with the document color', () => {
+  assert.match(buildPrintColorCss({ colorMode: 'dark' }), /#0d1117/);
+  assert.match(buildPrintColorCss({ colorMode: 'light' }), /#ffffff/);
+  assert.match(buildPrintColorCss({}), /print-color-adjust: exact/);
 });

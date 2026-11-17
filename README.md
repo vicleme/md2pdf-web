@@ -18,7 +18,8 @@ Convert Markdown (`.md`) files to PDF right in your browser. Private, fast and f
   - **Download PDF**: generates the file directly (text is rasterized as an image)
   - **Print / Save as PDF**: uses the browser print dialog (selectable text, smaller files)
 - English and Brazilian Portuguese interface, auto-detected and remembered
-- Light and dark interface, responsive layout
+- Light, dark or system interface (your choice is remembered), responsive layout
+- Light or dark **document colors**, independent of the interface theme. Works in the live preview, in **Download PDF** and in **Print / Save as PDF**
 - 100% client side. No server, no tracking, no uploads
 - HTML from the Markdown is sanitized (DOMPurify) before it reaches the page or the PDF
 
@@ -57,6 +58,7 @@ md2pdf-web/
 │   ├── modules/            # Pure, testable logic
 │   │   ├── markdown.js     # Markdown -> HTML (marked) + front matter
 │   │   ├── sanitize.js     # HTML sanitizing (DOMPurify)
+│   │   ├── theme.js        # Interface appearance (system / light / dark)
 │   │   ├── options.js      # PDF options, validation and html2pdf config
 │   │   ├── pdf.js          # HTML -> PDF export (html2pdf.js, lazy loaded)
 │   │   ├── files.js        # File checks, PDF naming, title extraction
@@ -83,6 +85,8 @@ The build uses relative paths, so it also works on Netlify, Vercel, Cloudflare P
 
 - **Download PDF** captures the rendered page as images, which is why text is not selectable and files can be larger. For selectable text, use **Print / Save as PDF** and choose "Save as PDF" as the destination.
 - Remote images in the Markdown need to allow cross-origin requests (CORS) to appear in the downloaded PDF.
+- Dark documents look great on screen but use a lot of ink on paper. Light is the default for that reason.
+- When printing a dark document from the browser dialog, enable **Background graphics** if your browser asks for it.
 - Very long documents can take a few seconds to generate.
 
 ## Contributing

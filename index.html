@@ -16,10 +16,20 @@
           <p class="tagline" data-i18n="tagline"></p>
         </div>
       </div>
-      <label class="lang">
-        <span class="sr-only" data-i18n="language"></span>
-        <select id="locale" aria-label="Language"></select>
-      </label>
+      <div class="topbar-controls">
+        <label class="control">
+          <span class="sr-only" data-i18n="appearance"></span>
+          <select id="appearance" aria-label="Appearance">
+            <option value="system" data-i18n="appearanceSystem"></option>
+            <option value="light" data-i18n="appearanceLight"></option>
+            <option value="dark" data-i18n="appearanceDark"></option>
+          </select>
+        </label>
+        <label class="control">
+          <span class="sr-only" data-i18n="language"></span>
+          <select id="locale" aria-label="Language"></select>
+        </label>
+      </div>
     </header>
 
     <main class="layout">
@@ -66,6 +76,13 @@
               <input type="number" id="opt-font-size" min="8" max="18" step="1" />
             </label>
             <label>
+              <span data-i18n="colors"></span>
+              <select id="opt-colors">
+                <option value="light" data-i18n="colorsLight"></option>
+                <option value="dark" data-i18n="colorsDark"></option>
+              </select>
+            </label>
+            <label>
               <span data-i18n="theme"></span>
               <select id="opt-theme">
                 <option value="clean" data-i18n="themeClean"></option>
@@ -73,6 +90,7 @@
               </select>
             </label>
           </div>
+          <p class="hint" id="dark-hint" data-i18n="darkHint" hidden></p>
         </details>
 
         <div class="export-bar">
@@ -94,6 +112,7 @@
     </main>
 
     <style id="print-page"></style>
+    <style id="print-colors"></style>
     <script type="module" src="/src/main.js"></script>
   </body>
 </html>

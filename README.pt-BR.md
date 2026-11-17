@@ -18,7 +18,8 @@ Converta arquivos Markdown (`.md`) em PDF direto no navegador. Privado, rápido 
   - **Baixar PDF**: gera o arquivo diretamente (o texto vira imagem)
   - **Imprimir / Salvar como PDF**: usa a janela de impressão do navegador (texto selecionável, arquivos menores)
 - Interface em inglês e português do Brasil, detectada automaticamente e lembrada
-- Interface clara e escura, layout responsivo
+- Interface clara, escura ou do sistema (a escolha fica salva), layout responsivo
+- **Cores do documento** claras ou escuras, independentes do tema da interface. Funciona na pré-visualização, em **Baixar PDF** e em **Imprimir / Salvar como PDF**
 - 100% no navegador. Sem servidor, sem rastreamento, sem uploads
 - O HTML gerado a partir do Markdown é sanitizado (DOMPurify) antes de chegar à página ou ao PDF
 
@@ -57,6 +58,7 @@ md2pdf-web/
 │   ├── modules/            # Lógica pura e testável
 │   │   ├── markdown.js     # Markdown -> HTML (marked) + front matter
 │   │   ├── sanitize.js     # Sanitização do HTML (DOMPurify)
+│   │   ├── theme.js        # Aparência da interface (sistema / claro / escuro)
 │   │   ├── options.js      # Opções do PDF, validação e config do html2pdf
 │   │   ├── pdf.js          # Exportação HTML -> PDF (html2pdf.js, carga sob demanda)
 │   │   ├── files.js        # Validação de arquivos, nome do PDF, extração do título
@@ -83,6 +85,8 @@ O build usa caminhos relativos, então também funciona na Netlify, Vercel, Clou
 
 - **Baixar PDF** captura a página renderizada como imagens, por isso o texto não é selecionável e os arquivos podem ser maiores. Para texto selecionável, use **Imprimir / Salvar como PDF** e escolha "Salvar como PDF" como destino.
 - Imagens remotas no Markdown precisam permitir requisições entre origens (CORS) para aparecer no PDF baixado.
+- Documentos escuros ficam ótimos na tela, mas gastam muita tinta no papel. Por isso o padrão é claro.
+- Ao imprimir um documento escuro pela janela do navegador, ative **Gráficos de plano de fundo** se o navegador pedir.
 - Documentos muito longos podem levar alguns segundos para serem gerados.
 
 ## Contribuindo
